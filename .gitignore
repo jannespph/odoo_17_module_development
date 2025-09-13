@@ -1,0 +1,6 @@
+# file environment
+.env
+#var
+var/
+# Odoo filestore dan session
+

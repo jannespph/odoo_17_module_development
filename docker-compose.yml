@@ -1,0 +1,44 @@
+services:
+  odoo:   
+    container_name: odoo  #<--- ini akan bertindak sebagai nama containernya 
+    image: odoo:17.0
+    env_file: .env
+    ports:
+      - "8069:8069"  #<----- yang kiri port host,kanan port dari container
+    volumes: 
+      - ./etc/odoo:/etc/odoo
+      - ./addons:/mnt/extra-addons
+      - ./var/lib/odoo:/var/lib/odoo
+    # environment:
+    #   - PASSWORD_FILE=/run/secrets/postgresql_password   <------ tidak di pakai
+    depends_on:
+      - odoo-postgres
+    networks :
+      - odoo-network
+  odoo-postgres:
+    container_name: odoo-postgres
+    image: postgres:16.1
+    env_file: .env
+    # environment:
+    #   - POSTGRES_DB=postgres
+    #   - POSTGRES_PASSWORD_FILE=/run/secrets/postgresql_password
+    #   - POSTGRES_USER=odoo
+    #   - PGDATA=/var/lib/postgresql/data/pgdata
+    volumes:
+      # - ./var/lib/postgresql/data/pgdata:/var/lib/postgresql/data/pgdata
+      - odoo-db-data:/var/lib/postgresql/data   # ✅ pakai named volume
+    networks :
+      - odoo-network
+    # secrets:
+    #   - postgresql_password
+volumes:
+  # odoo-web-data:
+  odoo-db-data:
+
+# secrets:
+#   postgresql_password:
+#     file: odoo_pg_pass
+   
+networks:
+  odoo-network:
+    driver: bridge    
