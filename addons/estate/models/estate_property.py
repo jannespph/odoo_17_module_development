@@ -1,0 +1,27 @@
+from odoo import fields, models
+
+class EstateProperty(models.Model):
+    _name = "estate.property"
+    _description = "Estate Property"   #<--- ini adalah private atribut yang digunakan sebagai identitas dari class
+
+    name = fields.Char(required=True)    #<------Di Odoo semua field huruf pertamanya kapital,kalau tidak akan terjadi error
+    description = fields.Text()
+    postcode = fields.Char()
+    date_availability = fields.Date()
+    expected_price = fields.Float(required=True)
+    selling_price = fields.Float()
+    bedrooms = fields.Integer()
+    living_are = fields.Integer()
+    facades = fields.Integer()
+    garage = fields.Boolean()
+    garden = fields.Boolean()
+    garden_area = fields.Integer()
+    garden_orientation = fields.Selection(
+        selection=[
+            ('north', 'North'),
+            ('south', 'South'),
+            ('east', 'East'),
+            ('west', 'West')
+        ]
+    )
+

@@ -1,7 +1,7 @@
 {
     "name" : "Real Estate",
     "depends" : [
-        "base",
+        "base"
     ],
     "application" : True
 }
