@@ -5,14 +5,14 @@ class EstateProperty(models.Model):
     _name = "estate.property"           #|
     _description = "Estate Property"    #|  <--- ini adalah private atribut yang digunakan sebagai identitas dari class
 
-    name = fields.Char(required=True)    #<------Di Odoo semua field huruf pertamanya kapital,kalau tidak akan terjadi error
+    name = fields.Char("Title",required=True)    #<------Di Odoo semua field huruf pertamanya kapital,kalau tidak akan terjadi error
     description = fields.Text()
     postcode = fields.Char()
-    date_availability = fields.Date(copy = False, default = lambda self: fields.Datetime.now() + relativedelta(months=3))
+    date_availability = fields.Date("Available From",copy = False, default = lambda self: fields.Datetime.now() + relativedelta(months=3))
     expected_price = fields.Float(required=True)
     selling_price = fields.Float(readonly=True, copy=False)
     bedrooms = fields.Integer(default=2)
-    living_area = fields.Integer()
+    living_area = fields.Integer("Living Area (sqm)")
     facades = fields.Integer()
     garage = fields.Boolean()
     garden = fields.Boolean()
