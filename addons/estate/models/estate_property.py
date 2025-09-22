@@ -1,5 +1,6 @@
 from odoo import _, api, fields, models
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
+from odoo.tools.float_utils import float_compare, float_is_zero
 from dateutil.relativedelta import relativedelta    
 
 class EstateProperty(models.Model):
@@ -37,7 +38,7 @@ class EstateProperty(models.Model):
             ('canceled','Canceled'),
         ],
         required = True,
-        copy = False,
+        copy = False       ,
         default ='new',
     )
     property_type_id = fields.Many2one("estate.property.type", string="Property Type")
@@ -48,7 +49,21 @@ class EstateProperty(models.Model):
     total_area = fields.Float(compute="_compute_total_area", string="Total Area (sqm)")
     best_price = fields.Float(compute="_compute_best_price", string="Best Offer")
     
+    _sql_constraints = [
+        ("check_expected_price_positive", "CHECK(expected_price > 0)",
+        "The expected price must be strictly positive"),
+        ("check_selling_price_positive", "CHECK(selling_price >= 0)",
+        "The expected price must be positive")
+    ]
 
+    @api.constrains("expected_price", "selling_price")
+    def _check_selling_price(self):
+        precision = 2
+        for record in self:
+            if not float_is_zero(record.selling_price, precision_digits=precision):
+                if float_compare(record.selling_price, 0.9 * record.expected_price, precision_digits=precision) < 0:
+                    raise ValidationError("The selling price must be at least 90% of the expected price! You must reduce the expected price if you want to accept this offer")
+   
     @api.depends("living_area", "garden_area")
     def _compute_total_area(self):
         for record in self:
@@ -70,7 +85,6 @@ class EstateProperty(models.Model):
             return {'warning': {
                 'title': _("Warning"),
                 'message': ('This option will enable Garden Area (default: 10) & Orientation (default: North)')}}
-    
         else:
             self.garden_area = None
             self.garden_orientation = None
@@ -88,6 +102,5 @@ class EstateProperty(models.Model):
                 raise UserError("Sold property cannot be canceled.")
             record.state = "canceled"
         return True
-    
 
-                
+ 
