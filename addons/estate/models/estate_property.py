@@ -6,6 +6,7 @@ from dateutil.relativedelta import relativedelta
 class EstateProperty(models.Model):
     _name = "estate.property"           #|
     _description = "Estate Property"    #|  <--- ini adalah private atribut yang digunakan sebagai identitas dari class
+    _order = "id desc"
 
     name = fields.Char("Title",required=True)    #<------Di Odoo semua field huruf pertamanya kapital,kalau tidak akan terjadi error
     description = fields.Text()
@@ -30,6 +31,7 @@ class EstateProperty(models.Model):
     active = fields.Boolean(default=False) #<------ gunanya field active di Odoo adalah untuk mengontrol apakah data ditampilkan (aktif) atau disembunyikan (diarsipkan) di UI
     #New, Offer Received, Offer Accepted, Sold and Cancelled.
     state = fields.Selection(
+        string="Status",
         selection=[
             ('new','New'),  #<----- catatn yang sebelah kiri itu value untuk database kalok yang kanan untuk di tampilkan di UI
             ('offer_received','Offer Received'),
