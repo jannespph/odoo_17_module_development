@@ -10,7 +10,7 @@ help:
 	@echo "	stop					Stop the compose"
 	@echo "	restart					Restart the compose"
 	@echo "	console					Odoo interective console"
-	@echo " psql					PostgreSQL interective shell"
+	@echo "	psql					PostgreSQL interective shell"
 	@echo "	logs odoo				Logs the odoo container"	
 	@echo "	logs db					Logs the postgresql container"
 	@echo " addon <addon_name>		Restart instance and upgrade addon"
