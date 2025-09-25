@@ -17,7 +17,7 @@ class EstatePropertyOffer(models.Model):
         string="Offer Status"
     )
     partner_id = fields.Many2one("res.partner", required=True)
-    property_id = fields.Many2one("estate.property", required=True)
+    property_id = fields.Many2one("estate.property", required=True, ondelete="cascade")
     validity = fields.Integer("Validity (days)", default=7)
     date_deadline = fields.Date(compute="_compute_date_deadline", inverse="_inverse_date_deadline", string="Deadline")
     property_state = fields.Selection(related='property_id.state', readonly=True, string="Status")
@@ -54,26 +54,22 @@ class EstatePropertyOffer(models.Model):
         for record in self:
             if record.property_id.state == "sold":
                 raise UserError("Cannot accept offer for a sold property")
-
-            # Tolak semua offer lain dulu
-            record.property_id.offer_ids.filtered(
-                lambda o: o.status == "accepted"
-            ).write({"status": "refused"})
-
-            # Set offer ini sebagai accepted
             record.status = "accepted"
             record.property_id.buyer_id = record.partner_id
             record.property_id.selling_price = record.price
-
-            # Ubah state property ke "offer_accepted"
-            record.property_id.state = "offer_accepted"
         return True
 
     def action_refuse(self):
         for record in self:
             record.status = "refused"
-
-            # Kalau semua offer sudah refuse → state balik ke "offer_received"
-            if all(o.status == "refused" for o in record.property_id.offer_ids):
-                record.property_id.state = "offer_received"
         return True
+
+    @api.model
+    def create(self, vals):
+        existing_offers = self.search([("property_id", "=", vals["property_id"])])
+        for offer in existing_offers:
+            if vals["price"] <= offer.price:
+                raise UserError("The offer amount must be higher than existing offers.")
+        property = self.env["estate.property"].browse(vals["property_id"])
+        property.state = "offer_received"
+        return super(EstatePropertyOffer, self).create(vals)
