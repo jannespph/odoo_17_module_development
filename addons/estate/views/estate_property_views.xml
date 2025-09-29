@@ -138,7 +138,7 @@
                                 Best Price: <field name="best_price"/>
                             </div>
                             <!-- the selling price is only displayed when an offer is accepted. -->
-                            <div t-if="record.state.raw_value == 'offer_accepted'" class="pb-3">
+                            <div t-if="record.state.raw_value == 'offer_accepted'">
                                 Selling Price: <field name="selling_price"/>
                             </div>
                             <div>
