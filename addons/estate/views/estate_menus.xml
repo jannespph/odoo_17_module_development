@@ -1,4 +1,5 @@
-<odoo>
+<!-- Ini code yang tidak sesaui dengan komunitas odoo -->
+<!-- <odoo>
     <menuitem id="estate_property_root" name="Real Estate">
         <menuitem id="estate_property_first_level_menu" name="Advertisements">
             <menuitem id="estate_property_menu_action" action="estate_property_action"/>
@@ -9,4 +10,49 @@
             <menuitem id="estate_property_tag_menu_action" action="estate_property_tag_action"/>   
         </menuitem>
     </menuitem>
-</odoo> 
+</odoo> -->
+
+<!-- Ini code dengan standart odoo -->
+<odoo>
+    <!-- Root -->
+    <menuitem 
+        id="estate_property_root" 
+        name="Real Estate"
+    />
+
+    <!-- first level: Advertisements -->
+    <menuitem 
+        id="estate_property_first_level_menu" 
+        name="Advertisements"
+        parent="estate_property_root"
+        sequence="1"
+    />
+    <!-- Advertisements: Action -->
+    <menuitem 
+        id="estate_property_menu_action" 
+        action="estate_property_action"
+        parent="estate_property_first_level_menu"
+        sequence="1"
+    />
+
+    <!-- first level: Settings -->
+    <menuitem 
+        id="estate_property_setting_menu" 
+        name="Settings"
+        parent="estate_property_root"
+        sequence="2"
+    />
+    <!-- Settings: Action -->
+    <menuitem 
+        id="estate_property_type_menu_action" 
+        action="estate_property_type_action"
+        parent="estate_property_setting_menu"
+        sequence="1"
+    />   
+    <menuitem 
+        id="estate_property_tag_menu_action" 
+        action="estate_property_tag_action"
+        parent="estate_property_setting_menu"
+        sequence="2"
+    />   
+</odoo>     
