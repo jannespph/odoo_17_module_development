@@ -1,0 +1,15 @@
+<odoo>
+    <!-- Inherit dari view tree estate_property -->
+    <record id="estate_property_view_tree_inherit_postcode_hide" model="ir.ui.view">
+        <field name="name">estate.property.view.tree.inherit.postcode.hide</field>
+        <field name="model">estate.property</field>
+        <!-- id asli dari modul estate -->
+        <field name="inherit_id" ref="estate.estate_property_view_tree"/>
+        <field name="arch" type="xml">
+            <!-- Targetkan field postcode -->
+            <field name="postcode" position="attributes">
+                <attribute name="optional">hide</attribute>
+            </field>
+        </field>
+    </record>
+</odoo>
